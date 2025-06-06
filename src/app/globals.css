@@ -1,26 +1,493 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0B0118;
+  --foreground: #F8F8FF;
+  --primary-color: #BF00FF;
+  --secondary-color: #7B00CA;
+  --accent-color: #FF3399;
+  --surface-color: rgba(30, 10, 60, 0.85);
+  --blur-strength: 15px;
+  --neon-glow: 0 0 15px rgba(191, 0, 255, 0.7), 0 0 30px rgba(191, 0, 255, 0.4);
+  --typing-speed: 3s;
+  --typing-delay: 0.5s;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Отключение увеличения при двойном клике */
+html {
+  touch-action: manipulation;
+}
+
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Разрешаем выделение только для элементов ввода и текстовых областей */
+input, textarea {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(ellipse at top, #160637 0%, #0B0118 70%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans, Arial, sans-serif);
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(191, 0, 255, 0.1) 0%, transparent 25%),
+    radial-gradient(circle at 80% 50%, rgba(255, 51, 153, 0.08) 0%, transparent 30%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Кнопка с тортом */
+.cake-button {
+  filter: drop-shadow(0 0 12px rgba(191, 0, 255, 0.5));
+  transition: all 0.3s ease;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.cake-button:hover {
+  filter: drop-shadow(0 0 15px rgba(191, 0, 255, 0.7));
+}
+
+.cake-button:active {
+  transform: scale(0.95);
+}
+
+/* Неоновый текст */
+.neon-text {
+  color: var(--foreground);
+  text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
+  letter-spacing: 0.05em;
+}
+
+.neon-number {
+  background: linear-gradient(to right, #BF00FF, #FF3399);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(191, 0, 255, 0.5);
+  font-weight: bold;
+}
+
+/* Стеклянный эффект */
+.glassmorphism {
+  background: var(--surface-color);
+  backdrop-filter: blur(var(--blur-strength));
+  -webkit-backdrop-filter: blur(var(--blur-strength));
+  border: 1px solid rgba(191, 0, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(10, 5, 15, 0.5);
+}
+
+/* Неоновая рамка */
+.neon-border {
+  position: relative;
+  border: 1px solid rgba(191, 0, 255, 0.5);
+  box-shadow: var(--neon-glow);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.neon-border::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--primary-color)) 1;
+  opacity: 0;
+  animation: borderPulse 3s infinite;
+  z-index: -1;
+}
+
+@keyframes borderPulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.8; }
+}
+
+/* Эффект свечения при наведении */
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+/* Стили карточек квестов */
+.quest-card {
+  transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  opacity: 0.8;
+  pointer-events: none;
+  animation: fall 2s linear forwards;
+  z-index: 100;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientFlow 3s ease infinite;
+}
+
+@keyframes sparkle {
+  0% {
+    background-position: 0% 100%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    background-position: 100% 0%;
+    opacity: 0;
+  }
+}
+
+.sparkle {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(217, 159, 255, 0.7) 50%,
+    rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: sparkle 1.5s linear infinite;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hover\:scale-102:hover {
+  transform: scale(1.02);
+}
+
+/* Анимация для текста награды */
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    #BF00FF 0%,
+    #FF3399 25%,
+    #FFF 50%,
+    #FF3399 75%,
+    #BF00FF 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: shimmer 3s linear infinite;
+  font-weight: bold;
+}
+
+/* Модернизированные кнопки */
+.btn-glow {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+  transform: translateY(-3px);
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #BF00FF, #FF3399, #BF00FF, #FF3399);
+  background-size: 400% 400%;
+  z-index: -1;
+  animation: glowBorder 3s ease infinite;
+  border-radius: 16px;
+}
+
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 14px;
+  background: #1a0440;
+  z-index: -1;
+}
+
+@keyframes glowBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Стиль для заголовков */
+.cyberpunk-heading {
+  position: relative;
+  color: var(--foreground);
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px var(--primary-color);
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.cyberpunk-heading::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary-color) 20%, var(--accent-color) 50%, var(--primary-color) 80%, transparent);
+  animation: gradientFlow 3s ease infinite;
+  background-size: 200% 200%;
+}
+
+/* Разделитель для секций */
+.divider {
+  width: 80%;
+  height: 2px;
+  margin: 1.5rem auto;
+  background: linear-gradient(90deg, transparent, var(--primary-color) 50%, transparent 100%);
+  opacity: 0.7;
+  border-radius: 1px;
+}
+
+/* Стилизация квестов */
+.quest-icon {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.quest-icon::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(191, 0, 255, 0.3) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Анимация перемешивания карт */
+@keyframes shuffleCard {
+  0% {
+    opacity: 0;
+    transform: perspective(800px) rotateY(20deg) translateY(50px);
+  }
+  30% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(800px) rotateY(0) translateY(0);
+  }
+}
+
+.shuffling-card {
+  animation: shuffleCard 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.card-waiting {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.card-ready {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Награда */
+.prize-box {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.prize-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, rgba(191, 0, 255, 0.2), rgba(255, 51, 153, 0.2));
+  z-index: -1;
+  animation: prizeGlow 3s infinite alternate;
+}
+
+@keyframes prizeGlow {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Стиль футера */
+.footer-link {
+  position: relative;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.3s;
+}
+
+.footer-link:hover {
+  color: var(--primary-color);
 }
