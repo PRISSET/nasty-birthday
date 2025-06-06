@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 
 export default function Home() {
@@ -8,12 +8,12 @@ export default function Home() {
   const [showWishes, setShowWishes] = useState(false);
   const [currentWish, setCurrentWish] = useState(0);
   
-  const wishes = [
+  const wishes = useMemo(() => [
     "С Днем Рождения, Настя! Желаю тебе счастья и здоровья! 🎉",
     "Пусть все твои мечты сбываются! ✨",
     "Улыбок, радости и много любви! ❤️",
     "Пусть этот год будет особенным! 🌟"
-  ];
+  ], []);
   
   useEffect(() => {
     if (clickCount >= 5) {

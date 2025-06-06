@@ -36,7 +36,6 @@ export function Confetti({ count = 100, intense = false }: ConfettiProps) {
       const bg = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
       const delay = Math.random() * 5;
       const duration = randomBetween(5, 10);
-      const rotation = randomBetween(-720, 720);
       const initialPosition = intense ? randomBetween(-20, 100) : -20;
       
       newConfetti.push(
@@ -66,7 +65,6 @@ export function Confetti({ count = 100, intense = false }: ConfettiProps) {
     let interval: NodeJS.Timeout;
     if (intense) {
       interval = setInterval(() => {
-        const additionalConfetti = [];
         for (let i = 0; i < 20; i++) {
           const left = Math.random() * 100;
           const bg = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
