@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Confetti } from "../../components/Confetti";
 
-export default function Reward({
-  searchParams,
-}: {
-  searchParams: { amount: string };
-}) {
-  const amount = searchParams.amount || "150";
+interface RewardPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default function Reward({ searchParams }: RewardPageProps) {
+  const amountParam = searchParams.amount || "150";
+  const amount = typeof amountParam === 'string' ? amountParam : "150";
   const [animateAmount, setAnimateAmount] = useState(false);
   const [showTelegram, setShowTelegram] = useState(false);
   
